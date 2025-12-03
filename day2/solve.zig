@@ -41,6 +41,8 @@ fn sumInvalidIdsInRange(input: []const u8) !u64 {
         if (i == 0 or @mod(digits, 2) != 0) {
             continue;
         }
+
+        // I got 10 by finding the biggest number in the puzzle input
         var buf: [10]u8 = undefined;
         const strInt: []u8 = try std.fmt.bufPrint(&buf, "{}", .{i});
 
