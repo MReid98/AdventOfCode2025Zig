@@ -35,17 +35,25 @@ fn sumInvalidIdsInRange(input: []const u8) !u64 {
 
     var sumInvalids: u64 = 0;
 
-    for (range[0]..range[1]+1) |i| {
+    for (range[0]..range[1]+1) |current| {
         // I got 10 by finding the biggest number in the puzzle input
         var buf: [10]u8 = undefined;
-        const strInt: []u8 = try std.fmt.bufPrint(&buf, "{}", .{i});
+        const strInt: []u8 = try std.fmt.bufPrint(&buf, "{}", .{current});
 
-        for (1..strInt.len / 2) {
+        outer: for (1..(strInt.len / 2) + 1) |testLength| {
+            // Only test further if the length is divisible by the check length
+            if (@rem(strInt.len, testLength) != 0) {
+                continue;
+            }
 
-        }
+            for (1..strInt.len / testLength) |testIteration| {
+                if (!std.mem.eql(u8, strInt[0..testLength], strInt[testLength*testIteration..(testLength*(testIteration+1))])) {
+                    continue :outer;
+                }
+            }
 
-        if (std.mem.eql(u8, strInt[0..digits / 2], strInt[digits / 2..strInt.len])) {
-            sumInvalids += i;
+            sumInvalids += current;
+            break;
         }
     }
 
